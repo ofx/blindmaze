@@ -56,7 +56,7 @@
 			$(document).ready(function () {
 				$('#xaxis').val(analysisActiveXAxis);
 				$('#yaxis').val(analysisActiveYAxis);
-			
+				
 				$('#xaxis').change(function () {
 					analysisActiveXAxis = $(this).val();
 					fetchClusters();
@@ -84,10 +84,30 @@
 						for (i = 1 ; i < data[elm]['clusterindex'].length ; ++i) {
 							d['color'] = $.xcolor.combine(d['color'], colors[data[elm]['clusterindex'][i]]);
 						}
-					
+						
 						var e = [];
-						e[0] = analysisActiveXAxis == 'elm' ? elm : data[elm]['i' + analysisActiveXAxis];
-						e[1] = analysisActiveYAxis == 'elm' ? elm : data[elm]['i' + analysisActiveYAxis];
+						if (analysisActiveXAxis == 'elm') {
+							e[0] = elm;
+						} else if (analysisActiveXAxis == 'mov') {
+							var i0 = parseFloat(data[elm]['i0']);
+							var i1 = parseFloat(data[elm]['i1']);
+							var i2 = parseFloat(data[elm]['i2']);
+							var i3 = parseFloat(data[elm]['i3']);
+							e[0] = i0 + i1 + i2 + i3;
+						} else {
+							e[0] = data[elm]['i' + analysisActiveXAxis];
+						}
+						if (analysisActiveYAxis == 'elm') {
+							e[1] = elm;
+						} else if (analysisActiveYAxis == 'mov') {
+							var i0 = parseFloat(data[elm]['i0']);
+							var i1 = parseFloat(data[elm]['i1']);
+							var i2 = parseFloat(data[elm]['i2']);
+							var i3 = parseFloat(data[elm]['i3']);
+							e[1] = i0 + i1 + i2 + i3;
+						} else {
+							e[1] = data[elm]['i' + analysisActiveYAxis];
+						}
 						
 						d['data'].push(e);
 						
@@ -202,6 +222,7 @@
 					<label for='xaxis'>X-Axis</label>
 					<select id='xaxis'>
 						<option value='elm' selected='1'>Session Index</option>
+						<option value='mov'>Move</option>
 						<option value='0'>Right</option>
 						<option value='1'>Left</option>
 						<option value='2'>Down</option>
@@ -212,6 +233,7 @@
 					<label for='yaxis'>Y-Axis</label>
 					<select id='yaxis'>
 						<option value='elm'>Session Index</option>
+						<option value='mov'>Move</option>
 						<option value='0' selected='1'>Right</option>
 						<option value='1'>Left</option>
 						<option value='2'>Down</option>
@@ -251,5 +273,16 @@
 				<div id='legend'>0 - Right<br/>1 - Left</br>2 - Down<br/>3 - Up</br>4 - Stop<br/>5 - Loop<br/>-1 - Initializer</div>
 			</div>
 		</div>
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-40460947-1']);
+			_gaq.push(['_trackPageview']);
+
+			(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+		</script>
     </body>
 </html>
